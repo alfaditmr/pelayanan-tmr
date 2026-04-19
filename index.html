@@ -1,416 +1,421 @@
-<!doctype html>
-<html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aplikasi Penyewaan Tempat</title>
-    <style>
-      :root {
-        --bg: #f4f7fb;
-        --card: #ffffff;
-        --primary: #2563eb;
-        --primary-dark: #1d4ed8;
-        --danger: #dc2626;
-        --text: #111827;
-        --muted: #6b7280;
-        --border: #d1d5db;
-      }
-
-      * { box-sizing: border-box; }
-
-      body {
-        margin: 0;
-        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-        color: var(--text);
-        background: var(--bg);
-      }
-
-      header {
-        background: linear-gradient(135deg, #1d4ed8, #3b82f6);
-        color: white;
-        padding: 2rem 1rem;
-      }
-
-      header h1 {
-        margin: 0;
-        font-size: 1.8rem;
-      }
-
-      header p {
-        margin: 0.5rem 0 0;
-        opacity: 0.9;
-      }
-
-      .container {
-        max-width: 1100px;
-        margin: 1.25rem auto;
-        padding: 0 1rem 2rem;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1rem;
-      }
-
-      .card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 1rem;
-        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
-      }
-
-      h2 {
-        margin-top: 0;
-        font-size: 1.15rem;
-      }
-
-      form {
-        display: grid;
-        gap: 0.6rem;
-      }
-
-      label {
-        display: grid;
-        gap: 0.25rem;
-        font-size: 0.9rem;
-      }
-
-      input, select, textarea, button {
-        border-radius: 8px;
-        border: 1px solid var(--border);
-        padding: 0.6rem 0.7rem;
-        font: inherit;
-      }
-
-      button {
-        background: var(--primary);
-        color: white;
-        border-color: var(--primary);
-        cursor: pointer;
-        font-weight: 600;
-      }
-
-      button:hover { background: var(--primary-dark); }
-
-      .danger {
-        background: var(--danger);
-        border-color: var(--danger);
-      }
-
-      .danger:hover { background: #b91c1c; }
-
-      .list {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: grid;
-        gap: 0.75rem;
-      }
-
-      .item {
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 0.75rem;
-        display: grid;
-        gap: 0.5rem;
-      }
-
-      .item-top {
-        display: flex;
-        justify-content: space-between;
-        gap: 0.6rem;
-      }
-
-      .price {
-        color: var(--primary-dark);
-        font-weight: 700;
-      }
-
-      .muted { color: var(--muted); font-size: 0.87rem; }
-
-      .empty {
-        color: var(--muted);
-        padding: 0.6rem;
-        border: 1px dashed var(--border);
-        border-radius: 8px;
-      }
-
-      .actions {
-        display: flex;
-        gap: 0.5rem;
-      }
-
-      .actions button {
-        flex: 1;
-        padding: 0.45rem 0.6rem;
-        font-size: 0.85rem;
-      }
-
-      .total {
-        padding: 0.6rem;
-        border-radius: 8px;
-        border: 1px solid #bfdbfe;
-        background: #eff6ff;
-        font-weight: 600;
-      }
-    </style>
-  </head>
-  <body>
-    <header>
-      <h1>Aplikasi Penyewaan Tempat</h1>
-      <p>Tambah tempat secara dinamis, lalu catat transaksi penyewaan.</p>
-    </header>
-
-    <main class="container">
-      <section class="card">
-        <h2>Tambah Tempat</h2>
-        <form id="place-form">
-          <label>
-            Nama Tempat
-            <input id="place-name" type="text" placeholder="Contoh: Aula Serbaguna" required />
-          </label>
-          <label>
-            Lokasi
-            <input id="place-location" type="text" placeholder="Contoh: Jakarta Selatan" required />
-          </label>
-          <label>
-            Harga per Hari (Rp)
-            <input id="place-price" type="number" min="0" step="1000" placeholder="500000" required />
-          </label>
-          <label>
-            Deskripsi
-            <textarea id="place-description" rows="2" placeholder="Fasilitas, kapasitas, dll"></textarea>
-          </label>
-          <button type="submit">Simpan Tempat</button>
-        </form>
-
-        <hr />
-
-        <h2>Daftar Tempat</h2>
-        <ul id="places-list" class="list"></ul>
-      </section>
-
-      <section class="card">
-        <h2>Form Penyewaan</h2>
-        <form id="rental-form">
-          <label>
-            Penyewa
-            <input id="renter-name" type="text" placeholder="Nama penyewa" required />
-          </label>
-          <label>
-            Pilih Tempat
-            <select id="rental-place" required></select>
-          </label>
-          <label>
-            Tanggal Mulai
-            <input id="start-date" type="date" required />
-          </label>
-          <label>
-            Durasi (hari)
-            <input id="duration" type="number" min="1" value="1" required />
-          </label>
-          <div id="calculation" class="total">Total: Rp0</div>
-          <button type="submit">Simpan Penyewaan</button>
-        </form>
-
-        <hr />
-
-        <h2>Riwayat Penyewaan</h2>
-        <ul id="rentals-list" class="list"></ul>
-      </section>
-    </main>
-
-    <script>
-      const STORAGE_KEYS = {
-        places: 'tmr_places',
-        rentals: 'tmr_rentals',
-      };
-
-      const placeForm = document.getElementById('place-form');
-      const placesList = document.getElementById('places-list');
-      const rentalForm = document.getElementById('rental-form');
-      const rentalPlaceSelect = document.getElementById('rental-place');
-      const rentalsList = document.getElementById('rentals-list');
-      const calculation = document.getElementById('calculation');
-      const durationInput = document.getElementById('duration');
-
-      const state = {
-        places: load(STORAGE_KEYS.places),
-        rentals: load(STORAGE_KEYS.rentals),
-      };
-
-      function load(key) {
-        try {
-          return JSON.parse(localStorage.getItem(key)) ?? [];
-        } catch {
-          return [];
-        }
-      }
-
-      function save(key, data) {
-        localStorage.setItem(key, JSON.stringify(data));
-      }
-
-      function formatRupiah(value) {
-        return new Intl.NumberFormat('id-ID', {
-          style: 'currency',
-          currency: 'IDR',
-          maximumFractionDigits: 0,
-        }).format(value);
-      }
-
-      function upsertSampleData() {
-        if (state.places.length > 0) return;
-        state.places = [
-          {
-            id: crypto.randomUUID(),
-            name: 'Ruang Meeting Merah',
-            location: 'Bandung',
-            pricePerDay: 350000,
-            description: 'Kapasitas 20 orang, AC, proyektor',
-          },
-        ];
-        save(STORAGE_KEYS.places, state.places);
-      }
-
-      function renderPlaces() {
-        if (state.places.length === 0) {
-          placesList.innerHTML = '<li class="empty">Belum ada tempat. Tambahkan dulu.</li>';
-        } else {
-          placesList.innerHTML = state.places
-            .map(
-              (place) => `
-                <li class="item">
-                  <div class="item-top">
-                    <strong>${place.name}</strong>
-                    <span class="price">${formatRupiah(place.pricePerDay)}/hari</span>
-                  </div>
-                  <span class="muted">📍 ${place.location}</span>
-                  <span class="muted">${place.description || '-'}</span>
-                  <div class="actions">
-                    <button class="danger" data-delete-place="${place.id}">Hapus</button>
-                  </div>
-                </li>
-              `,
-            )
-            .join('');
-        }
-
-        renderPlaceOptions();
-      }
-
-      function renderPlaceOptions() {
-        if (state.places.length === 0) {
-          rentalPlaceSelect.innerHTML = '<option value="">-- belum ada tempat --</option>';
-          rentalPlaceSelect.disabled = true;
-          return;
-        }
-
-        rentalPlaceSelect.disabled = false;
-        rentalPlaceSelect.innerHTML = state.places
-          .map((place) => `<option value="${place.id}">${place.name} (${formatRupiah(place.pricePerDay)}/hari)</option>`)
-          .join('');
-      }
-
-      function renderRentals() {
-        if (state.rentals.length === 0) {
-          rentalsList.innerHTML = '<li class="empty">Belum ada transaksi penyewaan.</li>';
-          return;
-        }
-
-        rentalsList.innerHTML = state.rentals
-          .map((rental) => {
-            const place = state.places.find((p) => p.id === rental.placeId);
-            return `
-              <li class="item">
-                <div class="item-top">
-                  <strong>${rental.renterName}</strong>
-                  <span class="price">${formatRupiah(rental.total)}</span>
-                </div>
-                <span class="muted">Tempat: ${place ? place.name : 'Tempat dihapus'}</span>
-                <span class="muted">Tanggal: ${rental.startDate} • ${rental.duration} hari</span>
-              </li>
-            `;
-          })
-          .join('');
-      }
-
-      function updateCalculation() {
-        const place = state.places.find((p) => p.id === rentalPlaceSelect.value) ?? state.places[0];
-        const days = Number(durationInput.value) || 0;
-        const total = place ? place.pricePerDay * days : 0;
-        calculation.textContent = `Total: ${formatRupiah(total)}`;
-      }
-
-      placeForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-
-        const name = document.getElementById('place-name').value.trim();
-        const location = document.getElementById('place-location').value.trim();
-        const pricePerDay = Number(document.getElementById('place-price').value);
-        const description = document.getElementById('place-description').value.trim();
-
-        state.places.push({
-          id: crypto.randomUUID(),
-          name,
-          location,
-          pricePerDay,
-          description,
-        });
-
-        save(STORAGE_KEYS.places, state.places);
-        placeForm.reset();
-        renderPlaces();
-        updateCalculation();
-      });
-
-      placesList.addEventListener('click', (event) => {
-        const button = event.target.closest('button[data-delete-place]');
-        if (!button) return;
-
-        const placeId = button.getAttribute('data-delete-place');
-        state.places = state.places.filter((p) => p.id !== placeId);
-        save(STORAGE_KEYS.places, state.places);
-        renderPlaces();
-        updateCalculation();
-      });
-
-      rentalPlaceSelect.addEventListener('change', updateCalculation);
-      durationInput.addEventListener('input', updateCalculation);
-
-      rentalForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-
-        const place = state.places.find((p) => p.id === rentalPlaceSelect.value);
-        if (!place) {
-          alert('Belum ada tempat yang bisa disewa.');
-          return;
-        }
-
-        const renterName = document.getElementById('renter-name').value.trim();
-        const startDate = document.getElementById('start-date').value;
-        const duration = Number(document.getElementById('duration').value);
-        const total = place.pricePerDay * duration;
-
-        state.rentals.unshift({
-          id: crypto.randomUUID(),
-          placeId: place.id,
-          renterName,
-          startDate,
-          duration,
-          total,
-        });
-
-        save(STORAGE_KEYS.rentals, state.rentals);
-        rentalForm.reset();
-        document.getElementById('duration').value = 1;
-        renderRentals();
-        updateCalculation();
-      });
-
-      upsertSampleData();
-      renderPlaces();
-      renderRentals();
-      updateCalculation();
-    </script>
-  </body>
-</html>
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/index.html b/index.html
+new file mode 100644
+index 0000000000000000000000000000000000000000..de0452040c40badaee1786c97add5aa4a396c312
+--- /dev/null
++++ b/index.html
+@@ -0,0 +1,411 @@
++<!doctype html>
++<html lang="id">
++  <head>
++    <meta charset="UTF-8" />
++    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++    <title>Aplikasi Penyewaan Tempat - Admin & User</title>
++    <style>
++      :root {
++        --bg: #f3f6fb;
++        --card: #fff;
++        --text: #0f172a;
++        --muted: #64748b;
++        --primary: #2563eb;
++        --primary-dark: #1d4ed8;
++        --danger: #dc2626;
++        --border: #dbe3ef;
++      }
++      * { box-sizing: border-box; }
++      body {
++        margin: 0;
++        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
++        color: var(--text);
++        background: var(--bg);
++      }
++      header {
++        background: linear-gradient(130deg, #1d4ed8, #3b82f6);
++        color: white;
++        padding: 1.5rem 1rem;
++      }
++      header h1 { margin: 0; font-size: 1.45rem; }
++      header p { margin: .35rem 0 0; opacity: .95; }
++
++      .wrapper { max-width: 1100px; margin: 1rem auto 2rem; padding: 0 1rem; }
++
++      .role-switch {
++        display: flex;
++        gap: .6rem;
++        margin-bottom: 1rem;
++      }
++      .role-switch button {
++        border: 1px solid var(--border);
++        background: white;
++        color: var(--text);
++        padding: .65rem .9rem;
++        border-radius: 10px;
++        font-weight: 600;
++        cursor: pointer;
++      }
++      .role-switch button.active {
++        background: var(--primary);
++        color: white;
++        border-color: var(--primary);
++      }
++
++      .panel { display: none; }
++      .panel.active { display: block; }
++
++      .grid {
++        display: grid;
++        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
++        gap: 1rem;
++      }
++
++      .card {
++        background: var(--card);
++        border: 1px solid var(--border);
++        border-radius: 12px;
++        padding: 1rem;
++      }
++      .card h2 { margin: 0 0 .85rem; font-size: 1.1rem; }
++
++      form { display: grid; gap: .65rem; }
++      label { display: grid; gap: .3rem; font-size: .92rem; }
++      input, select, textarea, button {
++        font: inherit;
++        border: 1px solid var(--border);
++        border-radius: 9px;
++        padding: .6rem .7rem;
++      }
++      button {
++        background: var(--primary);
++        border-color: var(--primary);
++        color: white;
++        font-weight: 600;
++        cursor: pointer;
++      }
++      button:hover { background: var(--primary-dark); }
++      button.danger { background: var(--danger); border-color: var(--danger); }
++
++      .list { margin: 0; padding: 0; list-style: none; display: grid; gap: .65rem; }
++      .item {
++        border: 1px solid var(--border);
++        border-radius: 10px;
++        padding: .7rem;
++        display: grid;
++        gap: .3rem;
++      }
++      .item-top {
++        display: flex;
++        justify-content: space-between;
++        gap: .6rem;
++        align-items: center;
++      }
++      .muted { color: var(--muted); font-size: .87rem; }
++      .price { color: #1e40af; font-weight: 700; }
++      .empty {
++        border: 1px dashed var(--border);
++        border-radius: 8px;
++        color: var(--muted);
++        padding: .7rem;
++      }
++      .total {
++        background: #eff6ff;
++        border: 1px solid #bfdbfe;
++        color: #1e3a8a;
++        font-weight: 700;
++        border-radius: 8px;
++        padding: .6rem;
++      }
++      .actions { display: flex; gap: .5rem; }
++      .actions button { flex: 1; }
++    </style>
++  </head>
++  <body>
++    <header>
++      <h1>Aplikasi Penyewaan Tempat</h1>
++      <p>Mode Admin untuk kelola tempat, Mode User untuk buat pemesanan.</p>
++    </header>
++
++    <main class="wrapper">
++      <div class="role-switch">
++        <button id="admin-tab" class="active" type="button">Menu Admin</button>
++        <button id="user-tab" type="button">Menu User</button>
++      </div>
++
++      <section id="admin-panel" class="panel active">
++        <div class="grid">
++          <article class="card">
++            <h2>Admin - Tambah Tempat</h2>
++            <form id="place-form">
++              <label>
++                Nama Tempat
++                <input id="place-name" type="text" required placeholder="Contoh: Aula Pernikahan" />
++              </label>
++              <label>
++                Lokasi
++                <input id="place-location" type="text" required placeholder="Contoh: Yogyakarta" />
++              </label>
++              <label>
++                Harga per Hari (Rp)
++                <input id="place-price" type="number" min="0" step="1000" required placeholder="500000" />
++              </label>
++              <label>
++                Fasilitas
++                <textarea id="place-facilities" rows="2" placeholder="AC, kursi, sound system..."></textarea>
++              </label>
++              <button type="submit">Simpan Tempat</button>
++            </form>
++          </article>
++
++          <article class="card">
++            <h2>Admin - Daftar Tempat</h2>
++            <ul id="places-list" class="list"></ul>
++          </article>
++        </div>
++      </section>
++
++      <section id="user-panel" class="panel">
++        <div class="grid">
++          <article class="card">
++            <h2>User - Form Penyewaan</h2>
++            <form id="booking-form">
++              <label>
++                Nama User
++                <input id="user-name" type="text" required placeholder="Nama pengguna" />
++              </label>
++              <label>
++                Nama Customer
++                <input id="customer-name" type="text" required placeholder="Nama customer/pemesan" />
++              </label>
++              <label>
++                Pilih Tempat
++                <select id="booking-place" required></select>
++              </label>
++              <label>
++                Tanggal Mulai
++                <input id="start-date" type="date" required />
++              </label>
++              <label>
++                Durasi (hari)
++                <input id="duration" type="number" min="1" value="1" required />
++              </label>
++              <label>
++                Permintaan Customer
++                <textarea id="customer-request" rows="3" placeholder="Contoh: tambahan dekorasi, setup panggung, dll"></textarea>
++              </label>
++              <div id="total-display" class="total">Total: Rp0</div>
++              <button type="submit">Simpan Pesanan</button>
++            </form>
++          </article>
++
++          <article class="card">
++            <h2>User - Riwayat Pesanan</h2>
++            <ul id="bookings-list" class="list"></ul>
++          </article>
++        </div>
++      </section>
++    </main>
++
++    <script>
++      const KEYS = {
++        places: 'rental_places_v2',
++        bookings: 'rental_bookings_v2',
++      };
++
++      const state = {
++        places: load(KEYS.places),
++        bookings: load(KEYS.bookings),
++      };
++
++      const adminTab = document.getElementById('admin-tab');
++      const userTab = document.getElementById('user-tab');
++      const adminPanel = document.getElementById('admin-panel');
++      const userPanel = document.getElementById('user-panel');
++      const placeForm = document.getElementById('place-form');
++      const placesList = document.getElementById('places-list');
++      const bookingForm = document.getElementById('booking-form');
++      const bookingPlace = document.getElementById('booking-place');
++      const durationInput = document.getElementById('duration');
++      const totalDisplay = document.getElementById('total-display');
++      const bookingsList = document.getElementById('bookings-list');
++
++      function load(key) {
++        try {
++          return JSON.parse(localStorage.getItem(key)) ?? [];
++        } catch {
++          return [];
++        }
++      }
++
++      function save(key, value) {
++        localStorage.setItem(key, JSON.stringify(value));
++      }
++
++      function rupiah(value) {
++        return new Intl.NumberFormat('id-ID', {
++          style: 'currency',
++          currency: 'IDR',
++          maximumFractionDigits: 0,
++        }).format(value);
++      }
++
++      function switchPanel(target) {
++        const isAdmin = target === 'admin';
++        adminTab.classList.toggle('active', isAdmin);
++        userTab.classList.toggle('active', !isAdmin);
++        adminPanel.classList.toggle('active', isAdmin);
++        userPanel.classList.toggle('active', !isAdmin);
++      }
++
++      adminTab.addEventListener('click', () => switchPanel('admin'));
++      userTab.addEventListener('click', () => switchPanel('user'));
++
++      function renderPlaces() {
++        if (state.places.length === 0) {
++          placesList.innerHTML = '<li class="empty">Belum ada tempat. Tambahkan dari menu admin.</li>';
++        } else {
++          placesList.innerHTML = state.places
++            .map((place) => `
++              <li class="item">
++                <div class="item-top">
++                  <strong>${place.name}</strong>
++                  <span class="price">${rupiah(place.pricePerDay)}/hari</span>
++                </div>
++                <span class="muted">📍 ${place.location}</span>
++                <span class="muted">Fasilitas: ${place.facilities || '-'}</span>
++                <div class="actions">
++                  <button class="danger" type="button" data-delete-place="${place.id}">Hapus Tempat</button>
++                </div>
++              </li>
++            `)
++            .join('');
++        }
++
++        renderBookingPlaceOptions();
++      }
++
++      function renderBookingPlaceOptions() {
++        if (state.places.length === 0) {
++          bookingPlace.innerHTML = '<option value="">-- belum ada tempat tersedia --</option>';
++          bookingPlace.disabled = true;
++          updateTotal();
++          return;
++        }
++
++        bookingPlace.disabled = false;
++        bookingPlace.innerHTML = state.places
++          .map((place) => `<option value="${place.id}">${place.name} (${rupiah(place.pricePerDay)}/hari)</option>`)
++          .join('');
++
++        updateTotal();
++      }
++
++      function renderBookings() {
++        if (state.bookings.length === 0) {
++          bookingsList.innerHTML = '<li class="empty">Belum ada pesanan dari user.</li>';
++          return;
++        }
++
++        bookingsList.innerHTML = state.bookings
++          .map((booking) => {
++            const place = state.places.find((p) => p.id === booking.placeId);
++            return `
++              <li class="item">
++                <div class="item-top">
++                  <strong>${booking.customerName}</strong>
++                  <span class="price">${rupiah(booking.total)}</span>
++                </div>
++                <span class="muted">User input: ${booking.userName}</span>
++                <span class="muted">Tempat: ${place ? place.name : 'Tempat sudah dihapus'}</span>
++                <span class="muted">Tanggal: ${booking.startDate} • Durasi: ${booking.duration} hari</span>
++                <span class="muted">Permintaan customer: ${booking.customerRequest || '-'}</span>
++              </li>
++            `;
++          })
++          .join('');
++      }
++
++      function updateTotal() {
++        const selectedPlace = state.places.find((p) => p.id === bookingPlace.value) ?? state.places[0];
++        const duration = Number(durationInput.value) || 0;
++        const total = selectedPlace ? selectedPlace.pricePerDay * duration : 0;
++        totalDisplay.textContent = `Total: ${rupiah(total)}`;
++      }
++
++      placeForm.addEventListener('submit', (event) => {
++        event.preventDefault();
++
++        const name = document.getElementById('place-name').value.trim();
++        const location = document.getElementById('place-location').value.trim();
++        const pricePerDay = Number(document.getElementById('place-price').value);
++        const facilities = document.getElementById('place-facilities').value.trim();
++
++        state.places.push({
++          id: crypto.randomUUID(),
++          name,
++          location,
++          pricePerDay,
++          facilities,
++        });
++
++        save(KEYS.places, state.places);
++        placeForm.reset();
++        renderPlaces();
++      });
++
++      placesList.addEventListener('click', (event) => {
++        const button = event.target.closest('button[data-delete-place]');
++        if (!button) return;
++
++        const placeId = button.getAttribute('data-delete-place');
++        state.places = state.places.filter((place) => place.id !== placeId);
++
++        save(KEYS.places, state.places);
++        renderPlaces();
++        renderBookings();
++      });
++
++      bookingPlace.addEventListener('change', updateTotal);
++      durationInput.addEventListener('input', updateTotal);
++
++      bookingForm.addEventListener('submit', (event) => {
++        event.preventDefault();
++
++        const selectedPlace = state.places.find((place) => place.id === bookingPlace.value);
++        if (!selectedPlace) {
++          alert('Belum ada tempat dari admin.');
++          return;
++        }
++
++        const userName = document.getElementById('user-name').value.trim();
++        const customerName = document.getElementById('customer-name').value.trim();
++        const startDate = document.getElementById('start-date').value;
++        const duration = Number(document.getElementById('duration').value);
++        const customerRequest = document.getElementById('customer-request').value.trim();
++        const total = selectedPlace.pricePerDay * duration;
++
++        state.bookings.unshift({
++          id: crypto.randomUUID(),
++          userName,
++          customerName,
++          placeId: selectedPlace.id,
++          startDate,
++          duration,
++          customerRequest,
++          total,
++        });
++
++        save(KEYS.bookings, state.bookings);
++        bookingForm.reset();
++        document.getElementById('duration').value = 1;
++        renderBookings();
++        updateTotal();
++      });
++
++      renderPlaces();
++      renderBookings();
++      updateTotal();
++    </script>
++  </body>
++</html>
+ 
+EOF
+)
